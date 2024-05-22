@@ -1,0 +1,177 @@
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+
+            <div class="input-group ms-3">
+                <select data-mdb-select-init data-mdb-filter="true" [(ngModel)]="selectedCustomer">
+                    <option *ngFor="let customer of customers" [value]="customer.CustID">
+                      {{ customer.Lastname }} {{ customer.Firstname }}
+                    </option>
+                  </select>
+                  
+                  
+                <div class="input-group-append">
+                  <span class="input-group-text" id="basic-addon2">
+                    <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                  </span>
+                </div>
+            </div>
+                        <div class="container mt-3">
+                            <b>Date: {{ currentDate | date:'MMM d' }}</b> <br>
+                            <b>Time: {{ currentDate | date:'h:mm:ss a' }}</b> <br>
+                        </div>
+                <div class="search mb-2">
+                    <div class="col">
+                        @if(BarcodeFailed){
+                            <div class="alert alert-danger">
+                                Cannot find Product Barcode
+                            </div>
+                        }
+                        <form class="d-flex" (ngSubmit)="searchProduct()" id="myForm">
+                          <input type="text" autofocus id="myInput" style="width: 500px;" class="form-control me-2" placeholder="Search Barcode." aria-label="Search Barcode" aria-describedby="basic-addon2" [(ngModel)]="Barcode" (ngModelChange)="onBarcodeChange($event)" [ngModelOptions]="{standalone: true}">
+                        </form>
+                        
+                    </div>
+                </div>
+
+                <div class="container mt-5">
+                   
+                    <table class="table table-stripped"> 
+                        <thead> 
+                            <tr>
+                                <th scope="col">Product name</th>
+                                <th scope="col">Price</th>
+                                <th scope="col"> Quantity </th>
+                                <th scope="col"> Total </th>
+                                <th></th>
+                            </tr> 
+                        </thead>
+                        <tbody > 
+                             @for(transaction of transactions; track transaction; let i = $index;){
+                                <tr (click)="displaySalesInfo(transaction)">
+                                <!-- <td>{{ transaction.Barcode }}</td> -->
+                                <td>{{ transaction.Prod_name }}</td>
+                                <td>{{ transaction.Price }}</td> 
+                               
+                                <td>
+                                    <span class="minus" style="cursor: pointer;" (click) ="decreaseQuantity(transaction)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-circle" viewBox="0 0 16 16">
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                            <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"/>
+                                        </svg>
+                                    </span>
+                                    <span class="num" style="padding: 5px;">{{ transaction.quantity }} </span>
+                                    <span class="plus" style="cursor: pointer;" (click)="increaseQuantity (transaction)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                                        </svg>
+                                    </span>
+                                </td>
+                                <td>{{ productTotal(transaction) }}</td> 
+                                <td><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="setIndexToDelete(i)">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                                      </svg>
+                                  </button></td>
+                                </tr>
+                            }
+                            
+                        </tbody> 
+                    </table>
+                
+                    <div>
+                        <h3>Amount Due: {{ ototal }}</h3>
+                      </div>
+                      @if(selectedCustomer === 'Cash' || selectedCustomer === '1'){
+                      <div>
+                        <div>
+                          <h3>Payment: <input type="number" [(ngModel)]="payment" (input)="calculateChange()"></h3>
+                        </div>
+                        <div>
+                          <h3>Change: {{ change }}</h3>
+                        </div>
+                      </div>
+                    }
+                      
+                      <button (click)="checkout()">Checkout</button>
+                </div> 
+        </div>
+
+        <div class="meals&snacks col-md-4 custom-bg-color border-radius: 20px">
+            <h5><b>Meals & Snacks</b></h5>
+            <!-- add search input  -->
+    
+            <!-- Buttons to filter by category -->
+            <div class="container mt-3 ms-3">
+              <button class="btn btn-primary" (click)="filterByCategory('all')">All</button>
+              <button *ngFor="let category of categories" class="btn btn-primary" (click)="filterByCategory(category.CatID)">{{ category.Type }}</button>
+            </div>
+            <input type="text"  style="width: 100%;" class="form-control me-2 mt-3" placeholder="Search Products" aria-label="Search Barcode" aria-describedby="basic-addon2" [(ngModel)]="searchFilter">
+
+            <div class="row mt-3">
+                <div class="col-md-12 mt-3" style="height: 500px; overflow: auto;">
+                    <div *ngFor="let product of products | searchFilter: searchFilter" (click)="searchProductWithBarcode(product.Barcode)" class="card mb-3" style="cursor: pointer;">
+                        <!-- <img src="/assets/images/chips.jpg" alt=""> -->
+                        <img src="{{product.imgFile}}" alt="img" width="50" height="50">
+                        <div class="card-body">
+                          <h5 class="card-title">{{ product.Prod_name }}</h5>
+                          <p class="card-text">Price: {{ product.Price }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Delete</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to remove this item?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="confirmDelete()">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Insufficient modal  -->
+  <!-- Add ngIf directive to conditionally display the modal -->
+  <div *ngIf="insufficientBalanceModalVisible"  
+  style="display: block; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60%; max-width: 1000px; height: 90%; max-height: 600px;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Notice</h1>
+      </div>
+      <div class="modal-body">
+        Insufficient balance! Proceed to Accounting to Load your Account Thankyou
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="closeInsufficientBalanceModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+<script>
+    document.getElementById("myForm").addEventListener("submit", function(event) {
+      event.preventDefault(); // Prevent form submission
+    
+      // Clear the input field
+      document.getElementById("myInput").value = "";
+    });
+    </script>

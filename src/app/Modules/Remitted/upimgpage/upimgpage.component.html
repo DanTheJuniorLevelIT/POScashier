@@ -1,0 +1,8 @@
+<form [formGroup]="PictureForm" (submit)="onPost()" method="post">
+        <div class="form-group">
+    <input type="file" class="custom-fileinput" required (change)="onFileSelected($event)"/>
+        </div>
+    <div style="margin-top: 10px;">
+        <button class="btn btn-primary" type="submit">Upload</button>
+    </div>
+</form>

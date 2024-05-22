@@ -1,0 +1,16 @@
+
+<div class="sidenav">
+  <nav class="navbar">
+    <ul class="nav-list">
+      <li><a class="nav-link" aria-current="page" [routerLink]="['/cashiermainpage/homepage']"><b>Home</b></a></li>
+      <li><a class="nav-link" [routerLink]="['/cashiermainpage/remittedpage']"><b>Remit</b></a></li>
+      <li><a class="nav-link" [routerLink]="['/cashiermainpage/Salesreportpage']"><b>Sales Report</b></a></li>
+      <li><a class="nav-link" [routerLink]="['/cashiermainpage/Returnpage']"><b>Return</b></a></li>
+      <li><a class="nav-link" href="/loginpage"><b>Logout</b></a></li>
+    </ul>
+  </nav>
+</div>
+<div class="main-content">
+  <router-outlet></router-outlet>
+</div>
+

@@ -1,0 +1,73 @@
+<section class="returns">
+    <div class="container">
+            <!-- <h2>Return & Replace</h2> -->
+            <div class="row">
+                <div class="col">
+                    <h1>Return & Replace</h1>
+                    <select data-mdb-select-init data-mdb-filter="true" [(ngModel)]="selectedCustomer">
+                        <option *ngFor="let customer of customers" [value]="customer.CustID">
+                        {{ customer.Lastname }} {{ customer.Firstname }}
+                        </option>
+                    </select>
+        
+                    <form class="d-flex mt-5" (ngSubmit)="searchProduct()" id="myForm">
+                        <div class="row">
+                            <div class="col">
+                                <input type="text" id="myInput" style="width: 500px;" class="form-control me-2" placeholder="Scan Return" aria-label="Search Barcode" aria-describedby="basic-addon2" 
+                                [(ngModel)]="returnBarcode" (ngModelChange)="onReturnBarcodeChange()" [ngModelOptions]="{standalone: true}">        
+                            </div>
+                            <div class="col mt-4">
+                                <input type="text" id="myInput1" style="width: 500px;" class="form-control me-2" placeholder="Scan Replace" aria-label="Search Barcode" aria-describedby="basic-addon2"  
+                                [(ngModel)]="replacementBarcode" [ngModelOptions]="{standalone: true}">        
+                            </div>
+                            
+                        </div>
+                    </form>
+                </div>
+                <div class="col">  
+                    <h1>Products</h1>
+                    <div class="meals&snacks col-md-12 custom-bg-color" style="background-color: #E6DDC6; border-radius: 20px; display: flex; flex-direction: column;">
+                        <input type="text" style="width: 100%;" class="form-control me-2 mt-3" placeholder="Search Products" aria-label="Search Barcode" aria-describedby="basic-addon2" [(ngModel)]="searchFilter">
+                    
+                        <div class="container mt-3" style="overflow-y: auto; max-height: 300px;">
+                            <div class="row">
+                                <div *ngFor="let product of products | searchFilter: searchFilter" class="col-md-4 mt-2" style="max-height: 300px;">
+                                    <div (click)="searchProductWithBarcode(product.Barcode)" class="card mb-3" style="cursor: pointer; max-height: 300px;">
+                                        <img src="{{product.imgFile}}" alt="img" width="100" height="100" class="card-img-top">
+                                        <div class="card-body">
+                                            <h6 class="card-title" style="height: 30px;">{{ product.Prod_name }}</h6>
+                                            <p class="card-text">Price: {{ product.Price }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                <h2 class="mt-5">Returns History</h2>
+                <div class="table-responsive mt-3">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Return Date</th>
+                                <th>Customer</th>
+                                <th>Returned Product</th>
+                                <th>Replacement Product</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for(item of ret | searchFilterByDate:startDate:endDate; track item ){
+                            <tr>
+                                <td>{{ item.return_date | date: 'hh:mm a'}}</td>
+                                <td>{{ item.Lastname }} {{ item.Firstname }}</td>
+                                <td>{{ item.returned_product }}</td>
+                                <td>{{ item.replacement_product }}</td>
+                            </tr>  }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    </div>
+</section>

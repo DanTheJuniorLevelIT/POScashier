@@ -1,0 +1,8 @@
+thead th {
+    color: #201658;
+}
+.btn-search {
+    background-color: #201658;
+    border-color: #201658; /* Optional: Change border color to match background color */
+    color: white; /* Text color */
+}

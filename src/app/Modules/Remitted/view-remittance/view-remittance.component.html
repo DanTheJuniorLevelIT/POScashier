@@ -1,0 +1,35 @@
+<!-- <button (click)="toggleDiv()">Add Remittance</button> -->
+
+@if(showDiv){
+  <div class="container">
+    <form [formGroup]="remittanceForm" (ngSubmit)="submit()">
+      <div class="input-group 3">
+        <!-- <input type="date" formControlName="date" class="form-control" placeholder="Select date" aria-label="date" aria-describedby="basic-addon2"> -->
+        <input type="text" formControlName="RemAmount" class="form-control" placeholder="insert amount" aria-label="date" aria-describedby="basic-addon2">
+      </div>
+      <button class="btn btn-primary" type="submit">Upload</button>
+    </form>
+  </div>
+}
+
+
+<table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Image</th>
+        <th scope="col">Date</th>
+        <th scope="col">Amount</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+        @for (u of remits; track u) {
+        <tr>
+          <td scope="row"><img style="width: 50px; height: 50px;" [src]="u.img"/></td>
+          <td>{{u.Date}}</td>
+          <td>{{u.Amount}}</td>
+          <td><i class="fa fa-upload" aria-hidden="true" (click)="remit(u.RemittanceID)"></i></td>
+        </tr>
+      }
+    </tbody>
+  </table>

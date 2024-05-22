@@ -1,0 +1,36 @@
+.table.table-stripped th,
+    .table.table-stripped td {
+    color: black;
+    
+    .custom-bg-color {
+        background-color: white;
+    }
+
+    .table.table-stripped th,
+    .table.table-stripped td {
+    color: #201658;
+    }
+    button {
+        border-radius: 20px; /* Adjust the value to make it more or less oval */
+        background-color: #201658;
+        padding: 10px 20px; /* Adjust padding as needed */
+        border: none;
+        color: white;
+      }
+      .highlight-price {
+        background-color: gray;
+        border-radius: 5px;
+        padding: 2px 5px;
+        color: white;
+    }
+    .button-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px; /* Adjust the gap value to your desired spacing */
+      }
+      
+      .button-container .btn {
+        flex: 0 1 auto; /* Ensure buttons maintain their size and space naturally */
+      }
+      
+}
