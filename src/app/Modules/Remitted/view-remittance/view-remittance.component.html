@@ -28,7 +28,7 @@
           <td scope="row"><img style="width: 50px; height: 50px;" [src]="u.img"/></td>
           <td>{{u.Date}}</td>
           <td>{{u.Amount}}</td>
-          <td><i class="fa fa-upload" aria-hidden="true" (click)="remit(u.RemittanceID)"></i></td>
+          <td><i class="fa fa-upload" aria-hidden="true" (click)="remit(u.RemittanceID, u.Amount, u.Date)"></i></td>
         </tr>
       }
     </tbody>

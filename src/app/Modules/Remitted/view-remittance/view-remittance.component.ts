@@ -55,10 +55,12 @@ submit() {
 
 
 
-  remit(rid: any){
+  remit(rid: any, amt: any, dt: any){
     this.route.navigate(["/cashiermainpage/remittedpage/remittedpage/upimgpage"]);
     console.log(rid);
     localStorage.setItem("RemitanceID", rid);
+    localStorage.setItem("amount", amt);
+    localStorage.setItem("date", dt);
   }
   
    

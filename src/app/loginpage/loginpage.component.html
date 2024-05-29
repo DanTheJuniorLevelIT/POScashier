@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" style="margin-left: 200px;">
   <div class="main">
     <p class="sign" align="center">Sign in</p>
     @if(showDiv){
@@ -6,7 +6,7 @@
         <h5 class="text-danger">Incorrect Password</h5>
       </div>
     }
-    <div class="container">
+    <div class="container" >
       <form class="form1" [formGroup]="loginForm" (ngSubmit)="loginFunct()">
         <input formControlName="use" type="text" class="form-control" id="username" placeholder="email">
         <input formControlName="pas" type="password" class="form-control" id="password" placeholder="password">

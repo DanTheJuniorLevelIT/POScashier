@@ -1,111 +1,127 @@
 <section class="intro">
-    <div class="container-fluid">
+    <div class="row">
+        <h3>Daily Transactions<button class="btn" (click)="print()"ngxPrint><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-printer-fill ms-3 fs-4" viewBox="0 0 16 16">
+            <path d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2zm6 8H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1"/>
+            <path d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1"/>
+          </svg></button>
+        </h3>
+    </div><hr>
+
+    <div class="container-fluid " id="Report">
         <div class="row">
             <div class="col-md-12 col-lg-11 col-sm-9 mx-auto">
                 <div class="row">
-                    <div class="col">
-                        <h3>Time: {{ time }}</h3>
-                        <h3>Date: {{ date }}</h3>
+                    <div class="col mt-3">
+                        <h5>Time: {{ time }}</h5>
+                        <h5>Date: {{ date }}</h5>
                     </div>  
                     <div class="col">
-                        <h3> Cash Sales: ₱ {{ totalsSales }}</h3>
-                        <h3> Charges Sales: ₱ {{ totalChargesSales }}</h3>
+                        
                     </div>
-                    <div class="col">
-                        <h3> Total Sales: ₱ {{ calculateTotalSales() }}</h3>
-                    </div>
+                    <section class="statistics mt-4">
+                        <div class="row">
+                          <div class="col-lg-4 mb-4">
+                            <div class="box d-flex rounded-2 align-items-center p-3 bg-light border me-3">
+                              <i class="bi bi-cash-coin fs-2 text-center bg-primary text-white rounded-circle"></i>
+                              <div class="ms-3">
+                                <div class="d-flex align-items-center">
+                                  <h3 class="mb-0">₱</h3> <span class="d-block ms-2 fs-5">{{ totalsSales }}</span>
+                                </div>
+                                <p class="fs-normal mb-0">Cash Sales</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-lg-4 mb-4">
+                            <div class="box d-flex rounded-2 align-items-center p-3 bg-light border me-3">
+                              <i class="bi bi-receipt fs-2 text-center bg-danger text-white rounded-circle"></i>
+                              <div class="ms-3">
+                                <div class="d-flex align-items-center">
+                                  <h3 class="mb-0">₱</h3> <span class="d-block ms-2 fs-5">{{ totalChargesSales }}</span>
+                                </div>
+                                <p class="fs-normal mb-0">Charges Sales</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-lg-4 mb-4">
+                            <div class="box d-flex rounded-2 align-items-center p-3 bg-light border">
+                              <i class="bi bi-graph-up-arrow fs-2 text-center bg-success text-white rounded-circle"></i>
+                              <div class="ms-3">
+                                <div class="d-flex align-items-center">
+                                  <h3 class="mb-0">₱</h3> <span class="d-block ms-2 fs-5">{{ calculateTotalSales() }}</span>
+                                </div>
+                                <p class="fs-normal mb-0">Total Sales</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                      
                 </div>
-                
-                
-                
-                
-                <!-- <h3 class="mt-5">Transaction History</h3>
-                    <div class="input-group mb-3">
-                    <input type="date" class="form-control" [(ngModel)]="startDate" placeholder="Start Date">
-                    <span class="input-group-text">to</span>
-                    <input type="date" class="form-control" [(ngModel)]="endDate" placeholder="End Date">
-                    </div>
-                
-                <div class="pt-2">
-                    <table class="table table-striped"> 
-                        <thead> 
-                            <tr> 
-                                <th scope="col">Date</th> 
-                                <th scope="col">View</th>
-                            </tr> 
-                        </thead>
-                        <tbody>
-                            @for(d of dates; track d){
-                            <tr >
-                                <th>{{ d }}</th>
-                                <td><button >View</button></td> 
-                            </tr> }
-                        </tbody> 
-                    </table>
-                </div> -->
             </div>
         </div>
-        <div class="row">   
-            <div class="col">
-                <div class="mt-4">
-                    <h3  >Cash Transaction</h3 >
-                    <table class="table table-striped"> 
-                        <thead> 
-                            <tr> 
-                                <th scope="col">Time</th> 
-                                <th scope="col">Product</th> 
-                                <th scope="col">Size</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Quantity</th> 
-                                <th scope="col">Total</th> 
-                            </tr> 
-                        </thead>
-                        <tbody>  
-                            @for(item of transactionDetails; track item){
-                              <tr>
-                                <td>{{ item.TransactionDate | date: 'hh:mm a' }}</td>
-                                <td>{{ item.Name }}</td>
-                                <td>{{ item.Size }}</td>
-                                <td>{{ item.Price }}</td>
-                                <td>{{ item.quantity }}</td>
-                                <td>{{ item.Price * item.quantity }}</td>
-                              </tr>
-                            }
-                        </tbody> 
-                    </table>
+         
+        <div class="container mt-3">
+            <div class="row" >
+                <div class="col me-3">
+                    <div class="mt-1">
+                        <h5>Cash</h5 >
+                        <table class="table table-striped"> 
+                            <thead> 
+                                <tr> 
+                                    <th scope="col">Time</th> 
+                                    <th scope="col">Product</th> 
+                                    <th scope="col">Size</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Quantity</th> 
+                                    <th scope="col">Total</th> 
+                                </tr> 
+                            </thead>
+                            <tbody>  
+                                @for(item of transactionDetails; track item){
+                                  <tr>
+                                    <td>{{ item.TransactionDate | date: 'hh:mm a' }}</td>
+                                    <td>{{ item.Name }}</td>
+                                    <td>{{ item.Size }}</td>
+                                    <td>{{ item.Price }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>{{ item.Price * item.quantity }}</td>
+                                  </tr>
+                                }
+                            </tbody> 
+                        </table>
+                    </div>
                 </div>
-                
-            </div>
-            <div class="col">
-<!-- credit -->
-                <div class="mt-4">
-                    <h3  >Credit Transaction</h3 >
-                    <table class="table table-striped"> 
-                        <thead> 
-                            <tr> 
-                                <th scope="col">Time</th> 
-                                <th scope="col">Customer</th> 
-                                <th scope="col">Product</th> 
-                                <th scope="col">Size</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Quantity</th> 
-                                <th scope="col">Total</th> 
-                            </tr> 
-                        </thead>
-                        <tbody>  
-                            @for(item of transactionChargesDetails; track item){
-                              <tr>
-                                <td>{{ item.TransactionDate | date: 'hh:mm a' }}</td>
-                                <td>{{ item.Firstname }} {{ item.Lastname }} </td>
-                                <td>{{ item.Name }}</td>
-                                <td>{{ item.Size }}</td>
-                                <td>{{ item.Price }}</td>
-                                <td>{{ item.quantity }}</td>
-                                <td>{{ item.Price * item.quantity }}</td>
-                              </tr>
-                            }
-                        </tbody> 
-                    </table>
+
+                <div class="col ms-3">
+                    <div class="mt-1 ms-3">
+                        <h5>Credit</h5>
+                        <table class="table table-striped"> 
+                            <thead> 
+                                <tr> 
+                                    <th scope="col">Time</th> 
+                                    <th scope="col">Customer</th> 
+                                    <th scope="col">Product</th> 
+                                    <th scope="col">Size</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Quantity</th> 
+                                    <th scope="col">Total</th> 
+                                </tr> 
+                            </thead>
+                            <tbody>  
+                                @for(item of transactionChargesDetails; track item){
+                                  <tr>
+                                    <td>{{ item.TransactionDate | date: 'hh:mm a' }}</td>
+                                    <td>{{ item.Firstname }} {{ item.Lastname }} </td>
+                                    <td>{{ item.Name }}</td>
+                                    <td>{{ item.Size }}</td>
+                                    <td>{{ item.Price }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>{{ item.Price * item.quantity }}</td>
+                                  </tr>
+                                }
+                            </tbody> 
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

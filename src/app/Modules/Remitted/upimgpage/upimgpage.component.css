@@ -1,0 +1,15 @@
+.form-container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+.custom-fileinput {
+    display: block;
+    width: 100%;
+}
+.form-group {
+    margin-bottom: 15px;
+}

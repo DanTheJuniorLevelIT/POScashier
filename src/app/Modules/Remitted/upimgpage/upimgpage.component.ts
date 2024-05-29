@@ -2,6 +2,7 @@ import { HttpClient, HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { PostService } from '../../../post.service';
 
 @Component({
   selector: 'app-upimgpage',
@@ -13,17 +14,21 @@ import { Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/rou
 export class UpimgpageComponent implements OnInit {
   constructor(
     private route: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private post: PostService,
   ) { }
 
   PictureForm = new FormGroup({});
   rid: any;
+  amt: any;
+  dt: any;
   filename: any;
   selectedFile: any;
   images: any;
   RemitanceID: any;
   remID: any;
   progress: any;
+  remits: any;
 
   remit = {
     RemitanceID: localStorage.getItem("RemitanceID"),
@@ -33,6 +38,8 @@ export class UpimgpageComponent implements OnInit {
   ngOnInit(): void {
     this.onPost();
     this.rid = localStorage.getItem('RemitanceID');
+    this.amt = localStorage.getItem('amount');
+    this.dt = localStorage.getItem('date');
     // const RID = localStorage.getItem('RemitanceID');
   }
 
@@ -53,6 +60,10 @@ export class UpimgpageComponent implements OnInit {
         observe: 'events',
         reportProgress: true
       }).subscribe((event:any) =>{
+        this.post.getremittance().subscribe((result: any) => {
+          this.remits = result;
+          console.log(this.remits);
+        });
         console.log(event);
       });
       this.route.navigate(['/cashiermainpage/remittedpage/remittedpage/viewremit'])

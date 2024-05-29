@@ -45,10 +45,10 @@ export class ViewProductComponent implements OnInit{
   categories: any[] = [];
   selectedCategoryId: string = 'all'; // Default to 'all'
   insufficientBalanceModalVisible: boolean = false;
-  constructor(private pos:PostService,private cdr: ChangeDetectorRef){}
-
+  checkoutmodule: boolean = false;
+  noticemodal: boolean = false;
   
-
+  constructor(private pos:PostService,private cdr: ChangeDetectorRef){}
   setIndexToDelete(index: number) {
     this.indexToDelete = index;
   }
@@ -64,8 +64,6 @@ export class ViewProductComponent implements OnInit{
     this.transactions.splice(index, 1);
     this.originalTotal();
   }
-
-
   productTotal(transaction:any): number {
     return transaction.quantity * transaction.Price;
   }
@@ -119,9 +117,8 @@ export class ViewProductComponent implements OnInit{
         console.error('Error occurred:', error);
       }
     });
+    
   }
-  
-
   displaySalesInfo(transaction:any){
     this.showInfo = true;
     this.salesInfo = {
@@ -130,7 +127,6 @@ export class ViewProductComponent implements OnInit{
       Price: transaction.Price,
     };
   }
-  
   searchProductWithBarcode(barcode: string) {
     this.Barcode = barcode;
     // You can perform any necessary actions here, such as searching for the product using the barcode
@@ -146,22 +142,19 @@ export class ViewProductComponent implements OnInit{
       }
     });
   }
-
   calculateChange() {
     this.change = this.payment - this.ototal;
   }
-
-  onBarcodeChange(event: any) {
-    if (this.Barcode.length >= 13) { // Assuming a minimum length for a valid barcode
-      this.searchProduct();
-    }
+  checkoutmodal(){
+    this.checkoutmodule = true;
+    this.cdr.detectChanges(); // Manually trigger change detection
+    console.log('modal checkout');
   }
-
   checkout(): void {
     const selectedCustomerId = this.selectedCustomer;
 
     // Check if the selected customer is not ID 1 and has charges
-    if (selectedCustomerId != 1 && this.customerHasCharges(selectedCustomerId)) {
+    if (selectedCustomerId !== 1 && this.customerHasCharges(selectedCustomerId)) {
         // Show modal indicating insufficient balance
         this.showInsufficientBalanceModal();
         return; // Halt the transaction process
@@ -176,26 +169,49 @@ export class ViewProductComponent implements OnInit{
         .subscribe(
             (response) => {
                 // Handle success response
-                console.log('Transaction and customer data posted successfully:', response);
-
-                // Clear transactions array
-                this.transactions = [];
-                this.originalTotal();
-                this.payment = 0;
-                this.change = 0;
-                this.fetchCustomers();
+                if (response && response.status === 'overall transaction inserted successfully.') {
+                    console.log('Transaction successfully.', response)
+                    this.noticemodal = true;
+                } else {
+                    if (response && response.message === 'Insufficient balance.') {
+                        this.showInsufficientBalanceModal();
+                    }
+                } 
+                    this.transactions = [];
+                    this.originalTotal();
+                    this.payment = 0;
+                    this.change = 0;
+                    this.fetchCustomers();
+                    
             },
             (error) => {
                 // Handle error response
                 console.error('Error occurred while posting transaction and customer data:', error);
             }
         );
-    }
+        this.checkoutmodule = false;
+        
+  }
 
-    showInsufficientBalanceModal() {
-      this.insufficientBalanceModalVisible = true;
-      console.log('modal display insuf');
-    }
+    customerHasCharges(selectedCustomerId: number): boolean {
+      const customer = this.customers.find(customer => customer.id === selectedCustomerId);
+      if (customer && customer.charges !== null && customer.charges > customer.credit) {
+        this.showInsufficientBalanceModal();
+
+          return true; // Customer has charges exceeding credit limit
+      } else {
+        
+          return false; // Customer has sufficient balance
+      }
+  }
+  showInsufficientBalanceModal() {
+    this.insufficientBalanceModalVisible = true;
+    this.cdr.detectChanges(); // Manually trigger change detection
+    console.log('modal display insuf');
+  }
+  closenoticemodal(){
+    this.noticemodal = false;
+  }
     closeInsufficientBalanceModal() {
     this.insufficientBalanceModalVisible = false;
     this.transactions = [];
@@ -204,19 +220,14 @@ export class ViewProductComponent implements OnInit{
     this.change = 0;
     this.fetchCustomers();
   }
-
-    customerHasCharges(customerId: number): boolean {
-      // Query the database or use the available data to check if the customer has charges
-      // Here's a simplified version assuming you have access to the customer data
-      const customer =  this.customers.find(cust => cust.CustID === customerId);
-      if (customer) {
-          return customer.charges >= customer.credit;
-      } else {
-          return false;
-      }
+  closecheckout(){
+    this.checkoutmodule = false;
+    // this.transactions = [];
+    this.originalTotal();
+    this.payment = 0;
+    this.change = 0;
+    this.fetchCustomers();
   }
-  
-
   fetchProducts(categoryId: string): void {
     if (categoryId === 'all') {
       // If 'all' category is selected, fetch all products
@@ -250,10 +261,6 @@ export class ViewProductComponent implements OnInit{
     this.selectedCategoryId = categoryId;
     this.fetchProducts(this.selectedCategoryId); // Fetch products based on the selected category
   }
-  
-  
-
-  
   ngOnInit():void{
     this.fetchProducts(this.selectedCategoryId);
 

@@ -1,10 +1,12 @@
-
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterOutlet, RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
 import { PostService } from '../../../post.service';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import {jsPDF} from 'jspdf';
+import html2canvas from 'html2canvas';
+import {NgxPrintModule} from 'ngx-print';
 @Component({
   selector: 'app-view-daily-sales',
   standalone: true,
@@ -17,6 +19,7 @@ import { HttpClientModule } from '@angular/common/http';
     FormsModule,
     CommonModule,
     HttpClientModule,
+    NgxPrintModule
   ],
   templateUrl: './view-daily-sales.component.html',
   styleUrl: './view-daily-sales.component.css',
@@ -46,7 +49,7 @@ export class ViewDailySalesComponent implements OnInit{
     return this.totalsSales + this.totalChargesSales;
   }
   
-
+  
   getdailyTransactionDetails() {
     const transactionId = 1;
     this.daily.getdailyTransactionDetails(transactionId).subscribe(
@@ -92,7 +95,19 @@ export class ViewDailySalesComponent implements OnInit{
     });
   }
   
-
+  print() {
+    const elementToPrint: any = document.getElementById('Report');
+    const pdfWidth = 210; // Width of the PDF document in mm (A4 size)
+    const pdfHeight = (elementToPrint.clientHeight / elementToPrint.clientWidth) * pdfWidth;
+  
+    html2canvas(elementToPrint, { scale: 2 }).then((canvas) => {
+      const pdf = new jsPDF('p', 'mm', 'a4'); // Create a new PDF with A4 dimensions
+      const imgData = canvas.toDataURL('image/png');
+  
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('DailysalesReport.pdf');
+    });
+  }
 
 }
 interface TransactionDetail {

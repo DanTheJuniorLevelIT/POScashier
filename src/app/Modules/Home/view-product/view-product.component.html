@@ -1,4 +1,3 @@
-
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-8">
@@ -29,7 +28,8 @@
                             </div>
                         }
                         <form class="d-flex" (ngSubmit)="searchProduct()" id="myForm">
-                          <input type="text" autofocus id="myInput" style="width: 500px;" class="form-control me-2" placeholder="Search Barcode." aria-label="Search Barcode" aria-describedby="basic-addon2" [(ngModel)]="Barcode" (ngModelChange)="onBarcodeChange($event)" [ngModelOptions]="{standalone: true}">
+                            <input type="text" autofocus id="myInput" style="width: 500px;" class="form-control me-2" placeholder="Search Barcode." aria-label="Search Barcode" aria-describedby="basic-addon2" [(ngModel)]="Barcode" [ngModelOptions]="{standalone: true}">
+                            <!-- <button type="submit" class="btn"> <i class="fa fa-search" aria-hidden="true"></i></button> -->
                         </form>
                         
                     </div>
@@ -84,46 +84,37 @@
                 
                     <div>
                         <h3>Amount Due: {{ ototal }}</h3>
+                        <button (click)="checkoutmodal()">Checkout</button>
                       </div>
-                      @if(selectedCustomer === 'Cash' || selectedCustomer === '1'){
-                      <div>
-                        <div>
-                          <h3>Payment: <input type="number" [(ngModel)]="payment" (input)="calculateChange()"></h3>
-                        </div>
-                        <div>
-                          <h3>Change: {{ change }}</h3>
-                        </div>
-                      </div>
-                    }
-                      
-                      <button (click)="checkout()">Checkout</button>
                 </div> 
         </div>
 
         <div class="meals&snacks col-md-4 custom-bg-color border-radius: 20px">
-            <h5><b>Meals & Snacks</b></h5>
-            <!-- add search input  -->
-    
-            <!-- Buttons to filter by category -->
-            <div class="container mt-3 ms-3">
-              <button class="btn btn-primary" (click)="filterByCategory('all')">All</button>
-              <button *ngFor="let category of categories" class="btn btn-primary" (click)="filterByCategory(category.CatID)">{{ category.Type }}</button>
-            </div>
-            <input type="text"  style="width: 100%;" class="form-control me-2 mt-3" placeholder="Search Products" aria-label="Search Barcode" aria-describedby="basic-addon2" [(ngModel)]="searchFilter">
+          <h5><b>Meals & Snacks</b></h5>
+          <!-- add search input  -->
+  
+          <!-- Buttons to filter by category -->
+          <!-- <div class="container mt-3 button-container" style="display:inline-block;" >
+            <button style="min-width: 100px;" class="btn btn-primary" (click)="filterByCategory('all')">All</button>
+            <button style=" margin: 5px; min-width: 100px;" *ngFor="let category of categories" class="btn btn-primary" (click)="filterByCategory(category.CatID)">{{ category.Type }}</button>
+          </div> -->
+          <input type="text"  style="width: 100%;" class="form-control me-2 mt-3" placeholder="Search Products" aria-label="Search Barcode" aria-describedby="basic-addon2" [(ngModel)]="searchFilter">
 
+          <div class="card-container">
             <div class="row mt-3">
-                <div class="col-md-12 mt-3" style="height: 500px; overflow: auto;">
-                    <div *ngFor="let product of products | searchFilter: searchFilter" (click)="searchProductWithBarcode(product.Barcode)" class="card mb-3" style="cursor: pointer;">
-                        <!-- <img src="/assets/images/chips.jpg" alt=""> -->
-                        <img src="{{product.imgFile}}" alt="img" width="50" height="50">
-                        <div class="card-body">
+                <div *ngFor="let product of products | searchFilter: searchFilter" class="col-md-6 mt-2" style=" overflow: auto;">
+                  <div  (click)="searchProductWithBarcode(product.Barcode)" class="card mb-3" style="cursor: pointer;">
+                    <img src="{{product.imgFile}}" alt="img" width="80" height="85">
+                    <div class="card-body">
                           <h5 class="card-title">{{ product.Prod_name }}</h5>
                           <p class="card-text">Price: {{ product.Price }}</p>
-                        </div>
-                    </div>
+                      </div>
+                  </div>
+                  </div>
+                  
                 </div>
             </div>
-        </div>
+      </div>
     </div>
 </div>
 
@@ -136,8 +127,8 @@
           <h1 class="modal-title fs-5" id="exampleModalLabel">Delete</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
-          Are you sure you want to remove this item?
+        <div class="modal-body text-danger text-center">
+          <h3>Are you sure you want to remove this item?</h3>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
@@ -156,8 +147,8 @@
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel">Notice</h1>
       </div>
-      <div class="modal-body">
-        Insufficient balance! Proceed to Accounting to Load your Account Thankyou
+      <div class="modal-body text-danger text-center">
+        <h3>Insufficient balance! <br> Proceed to Accounting to Load your Account Thankyou</h3>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" (click)="closeInsufficientBalanceModal()">Close</button>
@@ -166,7 +157,54 @@
   </div>
 </div>
 
-  
+<div *ngIf="checkoutmodule"  
+  style="display: block; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60%; max-width: 1000px; height: 90%; max-height: 600px;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Checkout</h1>
+      </div>
+      @if(selectedCustomer === 'Cash' || selectedCustomer === '1'){
+      <div class="modal-body">
+          <div>
+            <div>
+              <h3>Total Amount: {{ ototal }}</h3>
+              <h3 class="mt-4">Payment: <input type="number" [(ngModel)]="payment" (input)="calculateChange()" required></h3>
+            </div>
+            <div class="mt-4">
+              <h3>Change: {{ change }}</h3>
+            </div>
+          </div>
+      </div>}
+      @if(selectedCustomer !== '1'){ 
+      <div class="modal-body">
+        <!-- <h3>{{ selectedCustomer }}</h3> -->
+        <h3>Total Amount: {{ ototal }}</h3>
+      </div>}
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="closecheckout()">Cancel</button>
+        <button (click)="checkout()" >Checkout</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="noticemodal"  
+  style="display: block; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60%; max-width: 1000px; height: 90%; max-height: 600px;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Notice</h1>
+      </div>
+      <div class="modal-body text-center">
+        <h3> Succesfully Recorded <i class="bi bi-check2-circle" style="color: green;"></i></h3>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="closenoticemodal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
     document.getElementById("myForm").addEventListener("submit", function(event) {
       event.preventDefault(); // Prevent form submission

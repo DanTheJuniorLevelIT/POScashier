@@ -34,3 +34,15 @@
       }
       
 }
+button {
+  border-radius: 20px; /* Adjust the value to make it more or less oval */
+  background-color: #201658;
+  padding: 10px 20px; /* Adjust padding as needed */
+  border: none;
+  color: white;
+}
+
+.card-container{
+  overflow-y: scroll;
+  height: 580px;
+}

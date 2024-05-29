@@ -1,3 +1,5 @@
+<!-- <h3>{{amt}}</h3>
+<h3>{{dt}}</h3>
 <form [formGroup]="PictureForm" (submit)="onPost()" method="post">
         <div class="form-group">
     <input type="file" class="custom-fileinput" required (change)="onFileSelected($event)"/>
@@ -5,4 +7,19 @@
     <div style="margin-top: 10px;">
         <button class="btn btn-primary" type="submit">Upload</button>
     </div>
-</form>
+</form> -->
+<div class="container" style="margin-left: 300px; padding-left: 50px; align-content: center;">
+    <div class="form-container">
+        <form [formGroup]="PictureForm" (submit)="onPost()" method="post">
+          <h5>Amount: {{amt}}</h5>
+          <h5>Date: {{dt}}</h5>
+            <div class="form-group">
+                <label class="mb-3" for="fileInput">Select a picture to upload </label>
+                <input type="file" id="fileInput" class="custom-fileinput" required (change)="onFileSelected($event)">
+            </div>
+            <div class="form-group text-center" style="margin-top: 10px;">
+                <button class="btn btn-primary" type="submit">Upload</button>
+            </div>
+        </form>
+    </div>
+  </div>

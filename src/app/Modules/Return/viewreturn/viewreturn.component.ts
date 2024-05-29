@@ -6,10 +6,14 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { SearchFilterByDatePipe } from '../../../datepipe.pipe';
 import { ProductFilterPipe } from '../../../product-filter.pipe';
+import {jsPDF} from 'jspdf';
+import html2canvas from 'html2canvas';
+import {NgxPrintModule} from 'ngx-print';
 @Component({
   selector: 'app-viewreturn',
   standalone: true,
-  imports: [ProductFilterPipe,SearchFilterByDatePipe,RouterModule,RouterOutlet, ReactiveFormsModule, RouterLink, RouterLinkActive,FormsModule,CommonModule,HttpClientModule,],
+
+  imports: [ProductFilterPipe,SearchFilterByDatePipe,RouterModule,RouterOutlet, ReactiveFormsModule, RouterLink, RouterLinkActive,FormsModule,CommonModule,HttpClientModule,  NgxPrintModule,],
   templateUrl: './viewreturn.component.html',
   styleUrl: './viewreturn.component.css'
 })
@@ -77,7 +81,7 @@ export class ViewreturnComponent implements OnInit{
         }
       );
   }
-  searchProductWithBarcode(barcode: string) {
+  searchProductWithBarcode(barcode: any) {
     if (!this.returnBarcode) {
         this.returnBarcode = barcode;
         console.log('Barcode clicked:', barcode);
@@ -94,9 +98,9 @@ export class ViewreturnComponent implements OnInit{
     console.log('Return Barcode changed:', this.returnBarcode);
     // Switch focus to replacementBarcode if element exists
     const replacementBarcodeInput = document.getElementById('myInput1');
-    if (replacementBarcodeInput) {
-        replacementBarcodeInput.focus();
-    }
+    // if (replacementBarcodeInput) {
+    //     replacementBarcodeInput.focus();
+    // }
   }
   onReplacementBarcodeChange(barcode: string) {
     this.replacementBarcode = barcode;
@@ -163,6 +167,7 @@ export class ViewreturnComponent implements OnInit{
                 this.getReturn();
             }
         );
+
 }
   searchReturnProduct() {
     // Additional logic for handling the scanned return product
@@ -174,5 +179,18 @@ export class ViewreturnComponent implements OnInit{
     this.replacementProduct = this.replacementBarcode; // Assuming direct assignment
   }
 
+  print() {
+    const elementToPrint: any = document.getElementById('Report');
+    const pdfWidth = 210; // Width of the PDF document in mm (A4 size)
+    const pdfHeight = (elementToPrint.clientHeight / elementToPrint.clientWidth) * pdfWidth;
+  
+    html2canvas(elementToPrint, { scale: 2 }).then((canvas) => {
+      const pdf = new jsPDF('p', 'mm', 'a4'); // Create a new PDF with A4 dimensions
+      const imgData = canvas.toDataURL('image/png');
+  
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('ReturnReport.pdf');
+    });
+  }
 
 }
